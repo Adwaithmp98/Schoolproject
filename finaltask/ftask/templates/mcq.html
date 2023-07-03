@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dependent Dropdown Example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#department-select').change(function() {
+                var department_id = $(this).val();
+                $.ajax({
+                    url: '/get_courses/',
+                    data: { 'department_id': department_id },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#course-select').empty();
+                        $.each(data, function(index, course) {
+                            $('#course-select').append($('<option>').text(course.name).attr('value', course.id));
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Dependent Dropdown Example</h1>
+
+    <select id="department-select">
+        <option value="">Select Department</option>
+        {% for department in departments %}
+            <option value="{{ department.id }}">{{ department.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="course-select">
+        <option value="">Select Course</option>
+    </select>
+</body>
+</html>
